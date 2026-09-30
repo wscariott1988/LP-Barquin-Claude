@@ -1,0 +1,18 @@
+# robots.txt — https://barquin.grupows.com/
+#
+# A campanha e de trafego pago: a pagina esta em noindex,nofollow por decisao
+# (ver comentario no <head> de index.html). Isso NAO bloqueia a previa de link:
+# quem gera a previa e o robo, nao o indice de busca.
+#
+# Allow explicito para os robos que geram a previa de link no WhatsApp e no
+# Facebook. Com "User-agent: * / Allow: /" eles ja passariam; fica aqui so
+# para deixar a intencao registrada. Nao ha sitemap.xml (pagina unica).
+
+User-agent: *
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: WhatsApp
+Allow: /

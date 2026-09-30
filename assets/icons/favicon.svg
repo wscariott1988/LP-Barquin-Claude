@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Barquin">
-  <rect width="32" height="32" rx="7" fill="#021E43"/>
-  <circle cx="16" cy="16" r="5.97" fill="none" stroke="#FF6B03" stroke-width="6.02"/>
-  <path d="M19.13 19.13 25.19 25.19" fill="none" stroke="#FF6B03" stroke-width="2.85" stroke-linecap="round"/>
+  <rect width="32" height="32" rx="7" fill="#FFFFFF"/>
+  <!-- B geometrico navy: mesma geometria de build/tools/make_assets.py -->
+  <path fill="#021E43" fill-rule="evenodd" d="M5.82 3.89H12.01V28.11H5.82ZM12.01 3.89H20.68A6.05 6.05 0 0 1 20.68 16H12.01ZM12.01 16H20.68A6.05 6.05 0 0 1 20.68 28.11H12.01ZM12.01 7.74H20.68A2.2 2.2 0 0 1 20.68 12.15H12.01ZM12.01 19.85H20.68A2.2 2.2 0 0 1 20.68 24.26H12.01Z"/>
 </svg>

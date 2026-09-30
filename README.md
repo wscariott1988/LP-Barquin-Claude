@@ -10,6 +10,7 @@ Montagem e desmontagem de móveis, montagem corporativa, assistência, adaptaç�
 
 ```
 index.html          página única (todas as seções)
+robots.txt          regras para robôs (inclui facebookexternalhit e WhatsApp)
 css/main.css        estilos (main.min.css é a versão minificada)
 js/main.js          interações (carrossel, menu, formulários, analytics)
 assets/icons/       favicon e ícones
@@ -28,9 +29,14 @@ A pasta `build/` (scripts de auditoria, testes de layout/comportamento e screens
 
 ## Pré-publicação
 
-Pendências documentadas no comentário do `<head>` de `index.html`:
+Domínio definido: **https://barquin.grupows.com/**. `canonical`, `og:url` e
+`og:image` já usam URL absoluta, e existe `robots.txt` liberando os robôs da
+Meta e do WhatsApp.
 
-1. Definir o domínio e preencher `canonical` e `og:url`.
-2. Alterar `robots` de `noindex,nofollow` para `index,follow,max-image-preview:large`.
-3. Preencher os IDs reais de GA4 e Google Ads em `js/main.js`.
-4. Converter `og:image` em URL absoluta.
+Pendências restantes:
+
+1. Preencher os IDs reais de GA4 e Google Ads em `js/main.js`.
+2. Se a página deixar de ser só tráfego pago, trocar `noindex,nofollow` por
+   `index,follow,max-image-preview:large` no `<head>` de `index.html`.
+3. Após publicar, validar a prévia com o Facebook Sharing Debugger e enviando o
+   link pelo WhatsApp (o preview só é recalculado com a página no ar).
