@@ -1,0 +1,12 @@
+# Build artifacts and tooling
+build/
+
+# Original (non-optimized) photos
+assets/originals/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.lnk
+.vscode/
+.idea/

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Barquin">
+  <rect width="32" height="32" rx="7" fill="#021E43"/>
+  <circle cx="16" cy="16" r="5.97" fill="none" stroke="#FF6B03" stroke-width="6.02"/>
+  <path d="M19.13 19.13 25.19 25.19" fill="none" stroke="#FF6B03" stroke-width="2.85" stroke-linecap="round"/>
+</svg>
