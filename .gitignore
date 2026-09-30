@@ -1,8 +1,19 @@
-# Build artifacts and tooling
-build/
+# O codigo das ferramentas em build/tools/ e versionado; os artefatos que elas
+# geram (screenshots, relatorios, a variante async do HTML) nao. A whitelist e
+# deliberada: nenhum artefato novo entra no repo sem que alguem troque a regra.
+build/*
+!build/tools
+build/tools/*
+!build/tools/*.py
+!build/tools/*.mjs
+!build/tools/README.md
 
-# Original (non-optimized) photos
+# Original (non-optimized) photos — fonte dos recortes de build/tools/make_assets.py
 assets/originals/
+
+# Python
+__pycache__/
+*.py[cod]
 
 # OS / editor
 .DS_Store
