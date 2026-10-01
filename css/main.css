@@ -85,9 +85,13 @@ svg{display:block}
   padding:40px 0 48px}
 .hero::after{content:"";position:absolute;right:-150px;top:-130px;width:360px;height:360px;
   border:26px solid rgba(255,107,3,.22);border-radius:50%;pointer-events:none}
-/* A hero usa o MESMO .wrap das demais secoes (sem max-width extra): assim a
-   borda esquerda do texto coincide com a de todas as secoes abaixo. A largura
-   de leitura fica controlada no proprio h1, nao no container. */
+/* A hero usa o MESMO .wrap das demais secoes (sem max-width extra), entao a
+   largura do bloco continua batendo com as secoes abaixo. A diferenca e o
+   alinhamento: no celular o texto e encostado a esquerda (ver @media 599px) e
+   no desktop o bloco vai para o CENTRO do wrap -- medir de 1280 a 1920px
+   deixava ~498px vazios a direita e o centro de massa do texto 233px fora do
+   centro da pagina. A largura de leitura continua controlada no h1 e no sub,
+   nao no container. */
 .hero__in{position:relative;z-index:1}
 .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:700;
   letter-spacing:.09em;text-transform:uppercase;color:#FFD9B8;
@@ -288,6 +292,18 @@ svg{display:block}
   .grid3{grid-template-columns:repeat(3,1fr);gap:18px}
   .conf{grid-template-columns:1.35fr .9fr;gap:48px}
   .hero{padding:64px 0 72px}
+  /* Hero centralizada no desktop: o bloco de texto sai da esquerda e passa ao
+     centro do wrap, o que troca o vao torto de ~498px por margens simetricas.
+     text-align:center centraliza os filhos inline-level (a pilula do eyebrow e
+     o bloco inline-flex da experiencia); margin-inline:auto centraliza as
+     caixas de bloco com max-width (h1 e sub); justify-content:center faz o
+     mesmo nas duas linhas flex (CTA e lista de atendimento). O anel do ::after
+     continua no canto superior direito, atras do texto (z-index:1). */
+  .hero__in{text-align:center}
+  .hero h1{margin-inline:auto;text-align:center}
+  .hero__sub{margin-inline:auto}
+  .hero__cta{justify-content:center}
+  .hero__meta{justify-content:center}
   .brand img{width:164px}
   .site-header__in{min-height:72px}
   .site-nav{display:flex}
