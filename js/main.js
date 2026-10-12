@@ -10,69 +10,34 @@
   'use strict';
 
   /* ---------------------------------------------------------------------
-     1) CONFIGURAÇÃO DE MEDIÇÃO — PREENCHER COM OS IDs REAIS
+     1) MEDIÇÃO — CONFIGURAÇÃO
      ---------------------------------------------------------------------
-     Não há IDs ficticios neste arquivo. Enquanto os campos abaixo forem
-     null, nenhuma tag é carregada e nenhum evento é enviado.
-     Consent Mode v2 é montado com tudo negado ANTES de qualquer tag.
-     O clique em WhatsApp é registrado como MICROCONVERSÃO DE INTENÇÃO
-     DE CONTATO — não comprova conversa nem contratação.
+     O Consent Mode v2 (default negado + reaplicação da escolha salva) vive
+     em um UNICO bloco inline no <head>, ANTES do GTM, que expõe
+     window.barquinConsent. Este arquivo NÃO define consentimento: apenas
+     conduz a interface e grava a escolha do visitante em localStorage.
+     Enquanto os IDs forem null, nada é carregado daqui — as tags do Google
+     vivem no GTM e respeitam o estado definido no <head>.
+     O clique em WhatsApp é registrado como MICROCONVERSÃO DE INTENÇÃO DE
+     CONTATO — não comprova conversa nem contratação.
   */
   var MEDICAO = {
     ga4Id: null,          // ex.: 'G-XXXXXXXXXX'  (obrigatório para enable)
     adsId: null,          // ex.: 'AW-XXXXXXXXX'
     linkedInId: null,     // opcional, não usado nesta campanha
-    consentMode: true,    // Consent Mode v2 com default negado
-    // Ao existir um CMP real, chame: window.barquinConsent.grant() / .deny()
+    consentMode: true,    // Consent Mode v2 gerenciado pelo bloco do <head>
   };
 
+  var gtag = window.gtag;
   var gtagReady = false;
-  window.dataLayer = window.dataLayer || [];
 
-  function gtag() { window.dataLayer.push(arguments); }
+  function podeEnviar() { return typeof gtag === 'function'; }
 
-  function consentPadrao() {
-    if (!MEDICAO.consentMode || typeof gtag !== 'function') return;
-    gtag('consent', 'default', {
-      ad_storage: 'denied',
-      ad_user_data: 'denied',
-      ad_personalization: 'denied',
-      analytics_storage: 'denied',
-      functionality_storage: 'granted',
-      security_storage: 'granted',
-      wait_for_update: 500
-    });
-  }
-
-  /* API para o CMP real (banner de cookies) conceder ou negar. */
-  window.barquinConsent = {
-    grant: function () {
-      if (!MEDICAO.consentMode) return;
-      gtag('consent', 'update', {
-        ad_storage: 'granted',
-        ad_user_data: 'granted',
-        ad_personalization: 'granted',
-        analytics_storage: 'granted'
-      });
-      carregarTag();
-    },
-    deny: function () {
-      if (!MEDICAO.consentMode) return;
-      gtag('consent', 'update', {
-        ad_storage: 'denied',
-        ad_user_data: 'denied',
-        ad_personalization: 'denied',
-        analytics_storage: 'denied'
-      });
-    }
-  };
-
-  /* Carregamento ASSÍNCRONO já na primeira visita (não adiado até o 1º clique),
-     para preservar a atribuição do clique do Google Ads. */
+  /* Fallback de carregamento direto de GA4/Ads. Fica INATIVO enquanto
+     consentMode for true (padrão): as tags do Google vivem no GTM. */
   function carregarTag() {
-    if (gtagReady || !MEDICAO.ga4Id) return;
+    if (gtagReady || !podeEnviar() || !MEDICAO.ga4Id) return;
     gtagReady = true;
-    window.gtag = gtag;
     gtag('js', new Date());
     gtag('config', MEDICAO.ga4Id, { send_page_view: true });
     if (MEDICAO.adsId) gtag('config', MEDICAO.adsId, { send_page_view: false });
@@ -87,9 +52,8 @@
   }
 
   function iniciarMedicao() {
-    consentPadrao();
-    /* Sem CMP configurado, o default negado permanece: nada é enviado.
-       Quando o consentimento for registrado, barquinConsent.grant() libera. */
+    /* O consentimento é definido no <head> (window.barquinConsent). Sem IDs
+       preenchidos, nada é carregado daqui. */
     if (MEDICAO.ga4Id && !MEDICAO.consentMode) carregarTag();
   }
 
@@ -98,7 +62,7 @@
     var a = ev.target.closest && ev.target.closest('a[data-wa]');
     if (!a) return;
     /* não usa preventDefault: a navegação para o wa.me acontece sempre */
-    if (!gtagReady) return;
+    if (!gtagReady || !podeEnviar()) return;
     gtag('event', 'whatsapp_click', {
       event_category: 'contato',
       event_label: a.getAttribute('data-wa-pos') || a.getAttribute('data-wa') || 'desconhecido',
@@ -111,7 +75,65 @@
   }, { passive: true });
 
   /* ---------------------------------------------------------------------
-     2) CARROSSEL DE AVALIAÇÕES
+     2) PREFERÊNCIAS DE COOKIES (interface do Consent Mode v2)
+     O estado de consentimento é definido e reaplicado pelo bloco inline do
+     <head> (window.barquinConsent). Aqui só conduzimos a interface: mostrar
+     na primeira visita, aplicar a escolha e permitir alterá-la depois.
+  */
+  function iniciarConsentimento() {
+    var caixa = document.querySelector('[data-consent]');
+    var api = window.barquinConsent;
+    if (!caixa || !api) return;
+
+    var detalhes = caixa.querySelector('[data-consent-details]');
+    var btnAceitar = caixa.querySelector('[data-consent-accept]');
+    var btnRecusar = caixa.querySelector('[data-consent-reject]');
+    var btnPers = caixa.querySelector('[data-consent-customize]');
+    var btnSalvar = caixa.querySelector('[data-consent-save]');
+    var chkAna = caixa.querySelector('[data-consent-cat="analytics"]');
+    var chkAds = caixa.querySelector('[data-consent-cat="ads"]');
+    var btnAbrir = document.querySelector('[data-consent-open]');
+
+    function refletir() {
+      var p = api.read() || { analytics: false, ads: false };
+      if (chkAna) chkAna.checked = p.analytics === true;
+      if (chkAds) chkAds.checked = p.ads === true;
+    }
+
+    function abrir(focar) {
+      refletir();
+      caixa.hidden = false;
+      if (focar && btnPers) btnPers.focus();
+    }
+
+    function fechar() {
+      caixa.hidden = true;
+      if (detalhes) detalhes.hidden = true;
+      if (btnPers) btnPers.setAttribute('aria-expanded', 'false');
+    }
+
+    if (btnAceitar) btnAceitar.addEventListener('click', function () { api.acceptAll(); fechar(); });
+    if (btnRecusar) btnRecusar.addEventListener('click', function () { api.rejectAll(); fechar(); });
+    if (btnSalvar) btnSalvar.addEventListener('click', function () {
+      api.set({ analytics: !!(chkAna && chkAna.checked), ads: !!(chkAds && chkAds.checked) });
+      fechar();
+    });
+    if (btnPers && detalhes) btnPers.addEventListener('click', function () {
+      detalhes.hidden = !detalhes.hidden;
+      btnPers.setAttribute('aria-expanded', String(!detalhes.hidden));
+      if (!detalhes.hidden && chkAna) chkAna.focus();
+    });
+    if (btnAbrir) btnAbrir.addEventListener('click', function () { abrir(true); });
+
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !caixa.hidden) fechar();
+    });
+
+    if (api.read()) { fechar(); } else { abrir(false); }
+  }
+
+  /* ---------------------------------------------------------------------
+     3) CARROSSEL DE AVALIAÇÕES
      Um cartão por vista no celular, três lado a lado no desktop.
      Rolagem nativa (scroll-snap), sem autoplay. Teclado: a track tem
      tabindex=0 e os botões são <button>, então tudo é acessível por teclado.
@@ -210,7 +232,7 @@
   }
 
   /* ---------------------------------------------------------------------
-     3) PAINEL DE PRIVACIDADE
+     4) PAINEL DE PRIVACIDADE (informativo, no rodapé)
   */
   function iniciarPrivacidade() {
     var btn = document.querySelector('[data-priv]');
@@ -225,6 +247,7 @@
 
   function init() {
     try { iniciarMedicao(); } catch (e) { /* medição nunca quebra a página */ }
+    try { iniciarConsentimento(); } catch (e) { /* idem */ }
     try { iniciarCarrossel(); } catch (e) { /* idem */ }
     try { iniciarPrivacidade(); } catch (e) { /* idem */ }
   }

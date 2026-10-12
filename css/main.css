@@ -264,6 +264,38 @@ svg{display:block}
   100%{transform:scale(1.45);opacity:0}
 }
 
+/* ------------------------ preferências de cookies ------------------------ */
+/* Banner não-modal do Consent Mode v2. No celular fica ACIMA do botão
+   flutuante do WhatsApp (bottom:84px) para não cobrir esse CTA; no desktop
+   vira um cartão no canto inferior direito. */
+.consent{position:fixed;left:0;right:0;z-index:55;
+  bottom:calc(84px + env(safe-area-inset-bottom));
+  background:#fff;border-top:1px solid var(--line);
+  box-shadow:0 -8px 26px rgba(2,30,67,.16)}
+.consent__in{max-width:var(--maxw);margin-inline:auto;padding:16px var(--pad);
+  display:flex;flex-direction:column;gap:12px}
+.consent__t{font-size:18px;font-weight:800;color:var(--navy)}
+.consent__d{font-size:16px;color:var(--muted);max-width:72ch}
+.consent__acts{display:flex;flex-wrap:wrap;gap:10px 12px;align-items:center}
+.consent__more{display:inline-flex;align-items:center;min-height:44px;
+  padding:8px 4px;background:none;border:0;font:inherit;font-weight:700;
+  color:var(--navy);text-decoration:underline;cursor:pointer}
+.consent__cats{display:grid;gap:12px;margin:4px 0 14px}
+.consent__lbl{display:flex;gap:10px;align-items:flex-start;min-height:44px;
+  font-size:16px;color:var(--navy-700);cursor:pointer}
+.consent__lbl input[type=checkbox]{width:22px;height:22px;margin:2px 0 0;
+  flex:0 0 auto;accent-color:var(--orange)}
+.consent__lbl b{color:var(--navy)}
+.consent__fixed{font-size:16px;color:var(--muted)}
+.consent__fixed b{color:var(--navy)}
+.consent__actions{display:flex;justify-content:flex-start}
+@media (min-width:600px){
+  .consent{left:auto;right:18px;bottom:18px;max-width:460px;
+    border:1px solid var(--line);border-radius:16px;
+    box-shadow:0 12px 34px rgba(2,30,67,.2)}
+  .consent__in{padding:18px}
+}
+
 /* ============================== responsivo ============================= */
 @media (min-width:600px){
   :root{--pad:28px}
@@ -328,6 +360,6 @@ svg{display:block}
 
 /* impressão: só o conteúdo */
 @media print{
-  .site-header,.sticky,.carrossel__ctrl,.sec__cta{display:none}
+  .site-header,.sticky,.carrossel__ctrl,.sec__cta,.consent{display:none}
   body{background:#fff;padding:0}
 }

@@ -188,8 +188,25 @@ console.log('\n=== 2) MEDICAO (Consent Mode + evento de intencao) ===');
   console.log('  dataLayer com IDs vazios:', JSON.stringify(entregue.eventos));
   console.log('  consent mode default negado:', entregue.consents === 1 ? 'sim (1 registro)' : 'nao');
   console.log('  requisicoes externas:', entregue.externos.length ? entregue.externos.join(' | ') : 'nenhuma');
-  T('IDs vazios: nenhum consent/update concedido', !entregue.conceded, 'ok');
-  T('IDs vazios: zero requisicoes a terceiros', entregue.externos.length === 0, entregue.externos.join('|') || 'nenhuma');
+  /* O GTM-TCHRLCFV e a UNICA integracao de terceiros autorizada. Este
+     casador reconhece exclusivamente o container da campanha (gtm.js e os
+     proprios beacons /a do container). Qualquer outro terceiro — inclusive
+     outro container, o gtag/js direto do GA4, google-analytics ou doubleclick
+     — continua sendo tratado como vazamento. */
+  const DONO = 'GTM-TCHRLCFV';
+  const autorizado = (u) => {
+    try {
+      const x = new URL(u);
+      if (x.hostname !== 'www.googletagmanager.com') return false;
+      if (x.pathname !== '/gtm.js' && x.pathname !== '/a') return false;
+      return x.searchParams.get('id') === DONO;
+    } catch { return false; }
+  };
+  const naoAutorizados = entregue.externos.filter((u) => !autorizado(u));
+  const gtmPresente = entregue.externos.some((u) => autorizado(u));
+  console.log('  terceiros autorizados:', gtmPresente ? DONO : 'nenhum');
+  T('IDs vazios: nenhum consent/update concedido', !entregue.conceded, 'concedido=' + entregue.conceded);
+  T('IDs vazios: somente o container autorizado (GTM-TCHRLCFV) e carregado', gtmPresente && naoAutorizados.length === 0, naoAutorizados.join('|') || ('so ' + DONO));
   T('IDs vazios: nenhum page_view enviado', !entregue.eventos.some((e) => e.includes('config')), entregue.eventos.join(' | '));
 
   // --- 2b: com IDs de teste injetados (so em memoria, nunca no arquivo) ---
