@@ -3,69 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<!-- Consent Mode v2 (Google). Fonte UNICA de consentimento: este bloco inline
-     define o default negado e reaplica a escolha salva ANTES de o GTM carregar.
-     O js/main.js apenas conduz a interface e grava a escolha do visitante. -->
+<!-- Consent Mode v2 (Google). Site comercial de servicos locais no Brasil: nao
+     ha exigencia de bloqueio previo estilo GDPR. O default e concedido para
+     medicao e publicidade, entao o GTM carrega as tags ja liberadas. -->
 <script>
 (function (w) {
   w.dataLayer = w.dataLayer || [];
   function gtag() { w.dataLayer.push(arguments); }
   if (typeof w.gtag !== 'function') { w.gtag = gtag; }
-
-  var CHAVE = 'barquin_consent_v2';
-  var PADRAO = {
-    ad_storage: 'denied',
-    ad_user_data: 'denied',
-    ad_personalization: 'denied',
-    analytics_storage: 'denied',
+  gtag('consent', 'default', {
+    ad_storage: 'granted',
+    ad_user_data: 'granted',
+    ad_personalization: 'granted',
+    analytics_storage: 'granted',
     functionality_storage: 'granted',
-    security_storage: 'granted',
-    wait_for_update: 500
-  };
-  gtag('consent', 'default', PADRAO);
-
-  function ler() {
-    try {
-      var bruto = w.localStorage.getItem(CHAVE);
-      if (!bruto) { return null; }
-      var o = JSON.parse(bruto);
-      if (!o || o.v !== 2) { return null; }
-      return { analytics: o.analytics === true, ads: o.ads === true };
-    } catch (e) { return null; }
-  }
-
-  function aplicar(p) {
-    gtag('consent', 'update', {
-      ad_storage: p.ads ? 'granted' : 'denied',
-      ad_user_data: p.ads ? 'granted' : 'denied',
-      ad_personalization: p.ads ? 'granted' : 'denied',
-      analytics_storage: p.analytics ? 'granted' : 'denied'
-    });
-  }
-
-  function gravar(p) {
-    try {
-      w.localStorage.setItem(CHAVE, JSON.stringify({
-        v: 2, analytics: p.analytics === true, ads: p.ads === true
-      }));
-    } catch (e) { /* armazenamento indisponivel: a escolha vale so nesta visita */ }
-  }
-
-  w.barquinConsent = {
-    CHAVE: CHAVE,
-    read: ler,
-    set: function (p) {
-      var pref = { analytics: p && p.analytics === true, ads: p && p.ads === true };
-      aplicar(pref);
-      gravar(pref);
-      return pref;
-    },
-    acceptAll: function () { return w.barquinConsent.set({ analytics: true, ads: true }); },
-    rejectAll: function () { return w.barquinConsent.set({ analytics: false, ads: false }); }
-  };
-
-  var salvo = ler();
-  if (salvo) { aplicar(salvo); }
+    security_storage: 'granted'
+  });
 })(window);
 </script>
 <!-- Google Tag Manager -->
@@ -549,12 +502,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       Serra (ES) e toda a Grande Vitória<br>
       <span class="site-footer__priv">
         <button class="linkish" type="button" data-priv>Privacidade e medição</button>
-        <button class="linkish" type="button" data-consent-open>Preferências de cookies</button>
       </span>
     </p>
   </div>
   <div class="wrap" data-priv-panel hidden>
-    <p>Esta página usa medição para entender o desempenho dos anúncios no Google. A medição não altera o funcionamento dos botões e registra apenas que um clique em WhatsApp foi feito — ou seja, intenção de contato, não contratação. Nenhum dado é compartilhado com terceiros além das próprias tags de medição. Os sinais de medição e publicidade começam negados e só são ativados com o seu aceite, salvo no navegador e alterável a qualquer momento em "Preferências de cookies".</p>
+    <p>Esta página usa medição para entender o desempenho dos anúncios no Google. A medição não altera o funcionamento dos botões e registra apenas que um clique em WhatsApp foi feito — ou seja, intenção de contato, não contratação. Nenhum dado é compartilhado com terceiros além das próprias tags de medição.</p>
   </div>
 </footer>
 
@@ -565,44 +517,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <a class="btn btn--wa sticky__btn" data-wa="sticky" data-wa-pos="sticky_flutuante" href="https://wa.me/5527997806250?text=Ol%C3%A1%2C%20te%20encontrei%20no%20Google%20e%20gostaria%20de%20um%20or%C3%A7amento." target="_blank" rel="noopener" aria-label="Pedir orçamento no WhatsApp">
     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="currentColor"><path d="M12.04 2C6.6 2 2.2 6.4 2.2 11.84c0 1.94.55 3.75 1.52 5.29L2 22.5l5.5-1.68a9.8 9.8 0 0 0 4.54 1.12h.01c5.43 0 9.84-4.4 9.84-9.84C21.89 6.4 17.48 2 12.04 2Zm0 17.9h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.95.99-3.05-.2-.31a8.15 8.15 0 0 1-1.25-4.37c0-4.52 3.68-8.2 8.2-8.2a8.2 8.2 0 0 1 0 16.4Zm4.5-6.14c-.25-.13-1.46-.72-1.68-.8-.23-.09-.39-.13-.56.12-.16.25-.64.8-.78.97-.15.16-.29.18-.53.06-.25-.13-1.05-.39-2-1.23-.74-.66-1.24-1.47-1.38-1.72-.15-.25-.02-.38.1-.5.11-.12.25-.3.37-.44.13-.15.17-.25.25-.42.09-.16.04-.31-.02-.44-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.47c-.17 0-.43.06-.66.31-.23.25-.87.85-.87 2.07 0 1.22.89 2.4 1.01 2.56.13.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.47-.07 1.46-.6 1.67-1.17.2-.58.2-1.07.15-1.18-.06-.1-.23-.16-.48-.28Z"/></svg>
   </a>
-</div>
-
-<!-- Preferências de cookies e medição (interface do Consent Mode v2).
-     Começa oculto: o js/main.js mostra na primeira visita (sem escolha salva)
-     e reabre pelo botão "Preferências de cookies" no rodapé. Sem JS, o bloco
-     permanece oculto e a página segue navegável. -->
-<div class="consent" data-consent hidden>
-  <div class="consent__in" role="dialog" aria-modal="false" aria-labelledby="consent-t" aria-describedby="consent-d">
-    <h2 class="consent__t" id="consent-t">Cookies e medição</h2>
-    <p class="consent__d" id="consent-d">Usamos cookies e medição para entender o desempenho dos anúncios e melhorar a página. Os itens opcionais só são ativados com o seu aceite; os essenciais garantem o funcionamento e a segurança do site.</p>
-    <div class="consent__acts">
-      <button type="button" class="btn btn--wa btn--sm" data-consent-accept>Aceitar opcionais</button>
-      <button type="button" class="btn btn--ghost btn--sm" data-consent-reject>Recusar opcionais</button>
-      <button type="button" class="consent__more" data-consent-customize aria-expanded="false" aria-controls="consent-details">Personalizar</button>
-    </div>
-    <div class="consent__details" id="consent-details" data-consent-details hidden>
-      <ul class="consent__cats">
-        <li class="consent__cat">
-          <label class="consent__lbl" for="consent-cat-analytics">
-            <input type="checkbox" id="consent-cat-analytics" data-consent-cat="analytics">
-            <span><b>Medição e desempenho</b> — estatísticas de uso para melhorar a página (analytics_storage).</span>
-          </label>
-        </li>
-        <li class="consent__cat">
-          <label class="consent__lbl" for="consent-cat-ads">
-            <input type="checkbox" id="consent-cat-ads" data-consent-cat="ads">
-            <span><b>Publicidade</b> — medição de resultados dos anúncios Google (ad_storage, ad_user_data, ad_personalization).</span>
-          </label>
-        </li>
-        <li class="consent__fixed">
-          <b>Sempre ativos</b> — funcionamento e segurança do site (functionality_storage e security_storage).
-        </li>
-      </ul>
-      <div class="consent__actions">
-        <button type="button" class="btn btn--wa btn--sm" data-consent-save>Salvar preferências</button>
-      </div>
-    </div>
-  </div>
 </div>
 
 <script src="js/main.js" defer></script>

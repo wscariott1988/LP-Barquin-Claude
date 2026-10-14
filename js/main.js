@@ -12,10 +12,8 @@
   /* ---------------------------------------------------------------------
      1) MEDIÇÃO — CONFIGURAÇÃO
      ---------------------------------------------------------------------
-     O Consent Mode v2 (default negado + reaplicação da escolha salva) vive
-     em um UNICO bloco inline no <head>, ANTES do GTM, que expõe
-     window.barquinConsent. Este arquivo NÃO define consentimento: apenas
-     conduz a interface e grava a escolha do visitante em localStorage.
+     O Consent Mode v2 (default concedido) vive em um UNICO bloco inline no
+     <head>, ANTES do GTM. Este arquivo NÃO define consentimento.
      Enquanto os IDs forem null, nada é carregado daqui — as tags do Google
      vivem no GTM e respeitam o estado definido no <head>.
      O clique em WhatsApp é registrado como MICROCONVERSÃO DE INTENÇÃO DE
@@ -52,7 +50,7 @@
   }
 
   function iniciarMedicao() {
-    /* O consentimento é definido no <head> (window.barquinConsent). Sem IDs
+    /* O consentimento é definido no <head> (default concedido). Sem IDs
        preenchidos, nada é carregado daqui. */
     if (MEDICAO.ga4Id && !MEDICAO.consentMode) carregarTag();
   }
@@ -75,65 +73,7 @@
   }, { passive: true });
 
   /* ---------------------------------------------------------------------
-     2) PREFERÊNCIAS DE COOKIES (interface do Consent Mode v2)
-     O estado de consentimento é definido e reaplicado pelo bloco inline do
-     <head> (window.barquinConsent). Aqui só conduzimos a interface: mostrar
-     na primeira visita, aplicar a escolha e permitir alterá-la depois.
-  */
-  function iniciarConsentimento() {
-    var caixa = document.querySelector('[data-consent]');
-    var api = window.barquinConsent;
-    if (!caixa || !api) return;
-
-    var detalhes = caixa.querySelector('[data-consent-details]');
-    var btnAceitar = caixa.querySelector('[data-consent-accept]');
-    var btnRecusar = caixa.querySelector('[data-consent-reject]');
-    var btnPers = caixa.querySelector('[data-consent-customize]');
-    var btnSalvar = caixa.querySelector('[data-consent-save]');
-    var chkAna = caixa.querySelector('[data-consent-cat="analytics"]');
-    var chkAds = caixa.querySelector('[data-consent-cat="ads"]');
-    var btnAbrir = document.querySelector('[data-consent-open]');
-
-    function refletir() {
-      var p = api.read() || { analytics: false, ads: false };
-      if (chkAna) chkAna.checked = p.analytics === true;
-      if (chkAds) chkAds.checked = p.ads === true;
-    }
-
-    function abrir(focar) {
-      refletir();
-      caixa.hidden = false;
-      if (focar && btnPers) btnPers.focus();
-    }
-
-    function fechar() {
-      caixa.hidden = true;
-      if (detalhes) detalhes.hidden = true;
-      if (btnPers) btnPers.setAttribute('aria-expanded', 'false');
-    }
-
-    if (btnAceitar) btnAceitar.addEventListener('click', function () { api.acceptAll(); fechar(); });
-    if (btnRecusar) btnRecusar.addEventListener('click', function () { api.rejectAll(); fechar(); });
-    if (btnSalvar) btnSalvar.addEventListener('click', function () {
-      api.set({ analytics: !!(chkAna && chkAna.checked), ads: !!(chkAds && chkAds.checked) });
-      fechar();
-    });
-    if (btnPers && detalhes) btnPers.addEventListener('click', function () {
-      detalhes.hidden = !detalhes.hidden;
-      btnPers.setAttribute('aria-expanded', String(!detalhes.hidden));
-      if (!detalhes.hidden && chkAna) chkAna.focus();
-    });
-    if (btnAbrir) btnAbrir.addEventListener('click', function () { abrir(true); });
-
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && !caixa.hidden) fechar();
-    });
-
-    if (api.read()) { fechar(); } else { abrir(false); }
-  }
-
-  /* ---------------------------------------------------------------------
-     3) CARROSSEL DE AVALIAÇÕES
+     2) CARROSSEL DE AVALIAÇÕES
      Um cartão por vista no celular, três lado a lado no desktop.
      Rolagem nativa (scroll-snap), sem autoplay. Teclado: a track tem
      tabindex=0 e os botões são <button>, então tudo é acessível por teclado.
@@ -232,7 +172,7 @@
   }
 
   /* ---------------------------------------------------------------------
-     4) PAINEL DE PRIVACIDADE (informativo, no rodapé)
+     3) PAINEL DE PRIVACIDADE (informativo, no rodapé)
   */
   function iniciarPrivacidade() {
     var btn = document.querySelector('[data-priv]');
@@ -247,7 +187,6 @@
 
   function init() {
     try { iniciarMedicao(); } catch (e) { /* medição nunca quebra a página */ }
-    try { iniciarConsentimento(); } catch (e) { /* idem */ }
     try { iniciarCarrossel(); } catch (e) { /* idem */ }
     try { iniciarPrivacidade(); } catch (e) { /* idem */ }
   }
