@@ -143,9 +143,10 @@ completo em `build/layout-tests.json`.
 Quatro blocos:
 1. **Sem JavaScript** — desliga o script via CDP e confere que a página continua
    estilada e que os 13 CTAs seguem navegáveis.
-2. **Medição** — Consent Mode negado por padrão, zero requisições a terceiros
-   com os IDs vazios, e com IDs de teste confirma `config` do GA4/Ads e exatamente
-   um evento `whatsapp_click` carregando a posição do CTA.
+2. **Medição** — Consent Mode concedido por padrão; com os IDs vazios só o
+   container do GTM é carregado (nenhuma tag de terceiros direta), e com IDs de
+   teste confirma `config` do GA4/Ads e exatamente um evento `whatsapp_click`
+   carregando a posição do CTA.
 3. **Web vitals** — CLS e LCP em 375 e 1440 px.
 4. Grava as falhas em `build/behavior-tests.json`.
 

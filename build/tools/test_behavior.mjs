@@ -186,7 +186,7 @@ console.log('\n=== 2) MEDICAO (Consent Mode + evento de intencao) ===');
     };
   })()`);
   console.log('  dataLayer com IDs vazios:', JSON.stringify(entregue.eventos));
-  console.log('  consent mode default negado:', entregue.consents === 1 ? 'sim (1 registro)' : 'nao');
+  console.log('  consent mode default concedido:', entregue.consents === 1 ? 'sim (1 registro)' : 'nao');
   console.log('  requisicoes externas:', entregue.externos.length ? entregue.externos.join(' | ') : 'nenhuma');
   /* O GTM-TCHRLCFV e a UNICA integracao de terceiros autorizada. Este
      casador reconhece exclusivamente o container da campanha (gtm.js e os
@@ -205,7 +205,7 @@ console.log('\n=== 2) MEDICAO (Consent Mode + evento de intencao) ===');
   const naoAutorizados = entregue.externos.filter((u) => !autorizado(u));
   const gtmPresente = entregue.externos.some((u) => autorizado(u));
   console.log('  terceiros autorizados:', gtmPresente ? DONO : 'nenhum');
-  T('IDs vazios: nenhum consent/update concedido', !entregue.conceded, 'concedido=' + entregue.conceded);
+  T('IDs vazios: nenhum consent/update emitido alem do default do <head>', !entregue.conceded, 'update concedido=' + entregue.conceded);
   T('IDs vazios: somente o container autorizado (GTM-TCHRLCFV) e carregado', gtmPresente && naoAutorizados.length === 0, naoAutorizados.join('|') || ('so ' + DONO));
   T('IDs vazios: nenhum page_view enviado', !entregue.eventos.some((e) => e.includes('config')), entregue.eventos.join(' | '));
 
