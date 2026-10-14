@@ -165,15 +165,16 @@ conhecido e documentado desse modo.
 | `audit.py` pendências bloqueantes | 0 |
 | `test_layout.mjs` falhas | 0 |
 | `test_behavior.mjs` falhas | 0 |
-| Lighthouse mobile | perf 100 · a11y 100 · boas práticas 100 · SEO 63 |
-| Lighthouse desktop | perf 100 · a11y 100 · boas práticas 100 · SEO 63 |
+| Lighthouse mobile | perf 100 · a11y 100 · boas práticas 100 · SEO 100 |
+| Lighthouse desktop | perf 100 · a11y 100 · boas práticas 100 · SEO 100 |
 | CLS (modo inline) | 0 |
 
-O SEO 63 é **intenso**: a página está com `robots="noindex,nofollow"` por decisão
-(só tráfego pago). É a única auditoria que reprova (`is-crawlable`). O
-`robots.txt` já libera `facebookexternalhit` e `WhatsApp`, então a prévia não é
-afetada. Se um dia a página precisar ser indexada, trocar para
-`index,follow,max-image-preview:large` junto com o preenchimento dos IDs.
+O SEO era 63 enquanto a página estava com `robots="noindex,nofollow"` por decisão
+(só tráfego pago); a única auditoria que reprovava era `is-crawlable`. A indexação
+foi **liberada** com `index,follow,max-image-preview:large`, então o SEO passa a
+100. O `robots.txt` libera `facebookexternalhit` e `WhatsApp`, então a prévia não
+é afetada. Para indexar de fato, falta publicar o domínio e solicitar indexação
+no Google Search Console.
 
 Os avisos não bloqueantes da auditoria são esperados: seção de avaliações ainda
 sem textos transcritos, carrossel que só aparece com itens, e IDs de medição

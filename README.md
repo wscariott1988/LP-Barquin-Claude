@@ -36,7 +36,7 @@ Meta e do WhatsApp.
 Pendências restantes:
 
 1. Preencher os IDs reais de GA4 e Google Ads em `js/main.js`.
-2. Se a página deixar de ser só tráfego pago, trocar `noindex,nofollow` por
-   `index,follow,max-image-preview:large` no `<head>` de `index.html`.
+2. Indexação já liberada (`index,follow,max-image-preview:large` no `<head>` de
+   `index.html`). Falta validar no Google Search Console e solicitar indexação.
 3. Após publicar, validar a prévia com o Facebook Sharing Debugger e enviando o
    link pelo WhatsApp (o preview só é recalculado com a página no ar).

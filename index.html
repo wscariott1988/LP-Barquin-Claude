@@ -84,9 +84,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   1. ~~DOMINIO~~ RESOLVIDO: https://barquin.grupows.com/ — canonical, og:url e
      og:image (absoluta) preenchidos mais abaixo. Se o dominio mudar, trocar em
      canonical, og:url, og:image, og:image:secure_url, image_src e robots.txt.
-  2. ROBOTS: enquanto a campanha for so de trafego pago, a pagina fica noindex.
-     Trocar para "index,follow,max-image-preview:large" se quiser aparecer na
-     busca organica. Nao afeta a previa de link no WhatsApp/Facebook.
+  2. ~~ROBOTS~~ RESOLVIDO: indexacao liberada com
+     "index,follow,max-image-preview:large". A pagina pode aparecer na busca
+     organica alem do trafego pago. A previa de link no WhatsApp/Facebook nao
+     e afetada por essa mudanca.
   3. MEDICAO: preencher os IDs reais em js/main.js (GA4 e Google Ads).
      Nao inserir IDs ficticios. Nao usar em producao antes de preencher.
   4. ~~AVALIACOES~~ RESOLVIDO: as 9 avaliacoes reais de reviews.md ja estao
@@ -98,7 +99,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       composicao tipografica da hero.
   ============================================================================
 -->
-<meta name="robots" content="noindex,nofollow"> <!-- PENDENTE: ver item 2 acima -->
+<meta name="robots" content="index,follow,max-image-preview:large">
 <meta name="theme-color" content="#021E43">
 <meta name="color-scheme" content="light">
 
